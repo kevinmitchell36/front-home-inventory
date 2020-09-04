@@ -1,14 +1,17 @@
 document.getElementById("btn-red").addEventListener("click", displayBooks);
 
-var ajaxRequest = new XMLHttpRequest();
+let ajaxRequest = new XMLHttpRequest();
 function displayBooks() {
-  console.log("In displayBooks?")
   ajaxRequest.onreadystatechange = function() {
     if(ajaxRequest.readyState == 4) {
       if(ajaxRequest.status == 200) {
         console.log("File loaded");
-        console.log(this.response);
-        document.getElementById("books").innerHTML = ajaxRequest.responseText
+        let data = JSON.parse(this.responseText)
+        let output = ""
+        for(let i = 0; i < data.length; i++) {
+          output += `<li>${data[i].title}</li>`
+        }
+        document.getElementById("books").innerHTML = output;
       } else {
         console.log("Status: " + ajaxRequest.status);
       }
@@ -17,7 +20,6 @@ function displayBooks() {
     }
   }
   ajaxRequest.open("GET", "http://localhost:3000/api/", true);
-  // ajaxRequest.setRequestHeader("Content-Type", "application.json");
   ajaxRequest.send();
 }
 
